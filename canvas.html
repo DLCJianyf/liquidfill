@@ -51,8 +51,9 @@
         ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
         ctx.fillStyle = "#E3F7FF";
         ctx.fill();
-        ctx.closePath();
+
         ctx.clip();
+
         ctx.save();
 
         function getY(PX) {
@@ -89,6 +90,12 @@
             ctx.fillStyle = "#294D99";
             ctx.fill();
             ctx.closePath();
+
+            ctx.save();
+            ctx.globalCompositeOperation = "xor";
+            ctx.font = "80px Verdana";
+            ctx.fillText("30%", CP[0] - 80, CP[1]);
+            ctx.restore();
 
             window.requestAnimationFrame(animate);
         }
