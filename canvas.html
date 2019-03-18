@@ -27,8 +27,13 @@
         </div>
     </body>
     <script>
-        var canvas = document.getElementById("canvas");
+        var canvas = document.createElement("canvas");
+        canvas.width = "700";
+        canvas.height = "700";
         var ctx = canvas.getContext("2d");
+
+        var canvas1 = document.getElementById("canvas");
+        var ctx1 = canvas1.getContext("2d");
 
         var HF = 350;
         var R = 250;
@@ -49,11 +54,7 @@
 
         ctx.beginPath();
         ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
-        ctx.fillStyle = "#E3F7FF";
-        ctx.fill();
-
         ctx.clip();
-
         ctx.save();
 
         function getY(PX) {
@@ -66,6 +67,19 @@
 
             ctx.restore();
 
+            ctx.beginPath();
+            ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
+            ctx.fillStyle = "#E3F7FF";
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.font = "80px Verdana";
+            ctx.fillStyle = "#294D99";
+            ctx.fillText("30%", CP[0] - 80, CP[1]);
+            ctx.closePath();
+
+            ctx.save();
             ctx.beginPath();
             var angle = Math.acos(Math.abs(HF - Y) / R);
             var VX = R1 * Math.sin(angle);
@@ -81,21 +95,22 @@
             ctx.lineTo(X[1], HF + R1);
             ctx.lineTo(X[0], HF + R1);
 
-            // ctx.lineWidth = 2;
-            // ctx.strokeStyle = "#FF0000";
-            // ctx.stroke();
-
             ctx.shadowBlur = 20;
-            ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
             ctx.fillStyle = "#294D99";
             ctx.fill();
-            ctx.closePath();
 
-            ctx.save();
-            ctx.globalCompositeOperation = "xor";
+            ctx.closePath();
+            ctx.clip();
+
+            ctx.beginPath();
             ctx.font = "80px Verdana";
+            ctx.fillStyle = "#FFF";
             ctx.fillText("30%", CP[0] - 80, CP[1]);
+            ctx.closePath();
             ctx.restore();
+
+            ctx1.putImageData(ctx.getImageData(0, 0, 700, 700), 0, 0);
 
             window.requestAnimationFrame(animate);
         }
