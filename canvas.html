@@ -81,17 +81,17 @@
 
             ctx.save();
             ctx.beginPath();
-            var angle = Math.acos(Math.abs(HF - Y) / R);
-            var VX = R1 * Math.sin(angle);
-            var X = [Math.floor(HF - VX), Math.ceil(HF + VX)];
+            // var angle = Math.acos(Math.abs(HF - Y) / R);
+            // var VX = R1 * Math.sin(angle);
+            // var X = [Math.floor(HF - VX), Math.ceil(HF + VX)];
 
             var pX = 0;
             var PY = 0;
+            var X = [HF - R1, HF + R1];
             for (PX = X[0]; PX <= X[1] + 1; PX++) {
                 PY = getY(PX);
                 PX === X[0] ? ctx.moveTo(PX, PY) : ctx.lineTo(PX, PY);
             }
-
             ctx.lineTo(X[1], HF + R1);
             ctx.lineTo(X[0], HF + R1);
 
