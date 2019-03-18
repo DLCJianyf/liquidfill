@@ -2,6 +2,10 @@
 
 # 水球图简单实现
 
+# 水球图-自定义形状-猴子
+
+![image](https://github.com/DLCJianyf/liquidfill/blob/master/images/liquid-custom-monkey.gif)
+
 # 水球图-自定义形状
 
 ![image](https://github.com/DLCJianyf/liquidfill/blob/master/images/liquid-custom.gif)
