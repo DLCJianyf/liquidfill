@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <script src="./lib/path-data-polyfill.js"></script>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                display: block;
+            }
+            div {
+                width: 700px;
+                height: 700px;
+                border: 1px solid #000000;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="canvas" width="700px" height="700px"></canvas>
+        </div>
+    </body>
+    <script>
+        var canvas = document.createElement("canvas");
+        canvas.width = "700";
+        canvas.height = "700";
+        var ctx = canvas.getContext("2d");
+
+        var canvas1 = document.getElementById("canvas");
+        var ctx1 = canvas1.getContext("2d");
+
+        var HF = 350;
+        var R = 250;
+        var CP = [HF, HF];
+        var R1 = 230;
+        var Y = 400;
+        var WAVE = 40;
+        var AM = 40;
+        var FRAME = 1;
+        var QUECY = 20;
+
+        // ctx.beginPath();
+        // ctx.arc(CP[0], CP[1], R, 0, 2 * Math.PI);
+        // ctx.lineWidth = 8;
+        // ctx.strokeStyle = "#294D99";
+        // ctx.stroke();
+        // ctx.closePath();
+
+        //ctx.beginPath();
+        // ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
+        //ctx.save();
+        ctx.translate(-85, -350);
+        ctx.scale(2, 2);
+        let pathStr =
+            "path://M367.855,428.202c-3.674-1.385-7.452-1.966-11.146-1.794c0.659-2.922,0.844-5.85,0.58-8.719 c-0.937-10.407-7.663-19.864-18.063-23.834c-10.697-4.043-22.298-1.168-29.902,6.403c3.015,0.026,6.074,0.594,9.035,1.728 c13.626,5.151,20.465,20.379,15.32,34.004c-1.905,5.02-5.177,9.115-9.22,12.05c-6.951,4.992-16.19,6.536-24.777,3.271 c-13.625-5.137-20.471-20.371-15.32-34.004c0.673-1.768,1.523-3.423,2.526-4.992h-0.014c0,0,0,0,0,0.014 c4.386-6.853,8.145-14.279,11.146-22.187c23.294-61.505-7.689-130.278-69.215-153.579c-61.532-23.293-130.279,7.69-153.579,69.202 c-6.371,16.785-8.679,34.097-7.426,50.901c0.026,0.554,0.079,1.121,0.132,1.688c4.973,57.107,41.767,109.148,98.945,130.793 c58.162,22.008,121.303,6.529,162.839-34.465c7.103-6.893,17.826-9.444,27.679-5.719c11.858,4.491,18.565,16.6,16.719,28.643 c4.438-3.126,8.033-7.564,10.117-13.045C389.751,449.992,382.411,433.709,367.855,428.202z";
+
+        let identifier = "path://";
+        pathStr = pathStr.slice(pathStr.lastIndexOf(identifier) + identifier.length);
+        let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", pathStr);
+
+        let normalizedPathData = path.getPathData({ normalize: true });
+        normalizedPathData.forEach(function(item) {
+            switch (item.type) {
+                case "M":
+                    ctx.beginPath();
+                    ctx.moveTo(...item.values);
+                    break;
+                case "C":
+                    ctx.bezierCurveTo(...item.values);
+                    break;
+                case "L":
+                    ctx.lineTo(...item.values);
+                    break;
+                case "Z":
+                    ctx.closePath;
+                    break;
+            }
+        });
+        ctx.strokeStyle = "#FF0000";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.clip();
+        //ctx.restore();
+
+        ctx.save();
+
+        function getY(PX) {
+            return Math.sin(PX / WAVE - FRAME / QUECY) * AM + HF;
+        }
+
+        function animate() {
+            FRAME++;
+            ctx.clearRect(0, 0, 700, 700);
+
+            ctx.restore();
+
+            // ctx.beginPath();
+            // ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
+            // ctx.fillStyle = "#E3F7FF";
+            // ctx.fill();
+            // ctx.closePath();
+
+            ctx.beginPath();
+            ctx.font = "80px Verdana";
+            ctx.fillStyle = "#294D99";
+            ctx.fillText("30%", CP[0] - 250, CP[1]);
+            ctx.closePath();
+
+            ctx.save();
+            ctx.beginPath();
+            // var angle = Math.acos(Math.abs(HF - Y) / R);
+            // var VX = R1 * Math.sin(angle);
+            // var X = [Math.floor(HF - VX), Math.ceil(HF + VX)];
+
+            var pX = 0;
+            var PY = 0;
+            var X = [HF - R1 - 80, HF + R1];
+            for (PX = X[0]; PX <= X[1] + 1; PX++) {
+                PY = getY(PX);
+                PX === X[0] ? ctx.moveTo(PX, PY) : ctx.lineTo(PX, PY);
+            }
+            ctx.lineTo(X[1], HF + R1);
+            ctx.lineTo(X[0], HF + R1);
+
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+            ctx.fillStyle = "#294D99";
+            ctx.fill();
+
+            ctx.closePath();
+            ctx.clip();
+
+            ctx.beginPath();
+            ctx.font = "80px Verdana";
+            ctx.fillStyle = "#FFF";
+            ctx.fillText("30%", CP[0] - 250, CP[1]);
+            ctx.closePath();
+            ctx.restore();
+
+            ctx1.putImageData(ctx.getImageData(0, 0, 700, 700), 0, 0);
+
+            window.requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</html>

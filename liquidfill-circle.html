@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                display: block;
+            }
+            div {
+                width: 700px;
+                height: 700px;
+                border: 1px solid #000000;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <canvas id="canvas" width="700px" height="700px"></canvas>
+        </div>
+    </body>
+    <script>
+        var canvas = document.createElement("canvas");
+        canvas.width = "700";
+        canvas.height = "700";
+        var ctx = canvas.getContext("2d");
+
+        var canvas1 = document.getElementById("canvas");
+        var ctx1 = canvas1.getContext("2d");
+
+        var HF = 350;
+        var R = 250;
+        var CP = [HF, HF];
+        var R1 = 230;
+        var Y = 400;
+        var WAVE = 40;
+        var AM = 40;
+        var FRAME = 1;
+        var QUECY = 20;
+
+        ctx.beginPath();
+        ctx.arc(CP[0], CP[1], R, 0, 2 * Math.PI);
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = "#294D99";
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
+        ctx.clip();
+        ctx.save();
+
+        function getY(PX) {
+            return Math.sin(PX / WAVE - FRAME / QUECY) * AM + HF;
+        }
+
+        function animate() {
+            FRAME++;
+            ctx.clearRect(0, 0, 700, 700);
+
+            ctx.restore();
+
+            ctx.beginPath();
+            ctx.arc(CP[0], CP[1], R1, 0, 2 * Math.PI);
+            ctx.fillStyle = "#E3F7FF";
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.font = "80px Verdana";
+            ctx.fillStyle = "#294D99";
+            ctx.fillText("30%", CP[0] - 80, CP[1]);
+            ctx.closePath();
+
+            ctx.save();
+            ctx.beginPath();
+            // var angle = Math.acos(Math.abs(HF - Y) / R);
+            // var VX = R1 * Math.sin(angle);
+            // var X = [Math.floor(HF - VX), Math.ceil(HF + VX)];
+
+            var pX = 0;
+            var PY = 0;
+            var X = [HF - R1, HF + R1];
+            for (PX = X[0]; PX <= X[1] + 1; PX++) {
+                PY = getY(PX);
+                PX === X[0] ? ctx.moveTo(PX, PY) : ctx.lineTo(PX, PY);
+            }
+            ctx.lineTo(X[1], HF + R1);
+            ctx.lineTo(X[0], HF + R1);
+
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+            ctx.fillStyle = "#294D99";
+            ctx.fill();
+
+            ctx.closePath();
+            ctx.clip();
+
+            ctx.beginPath();
+            ctx.font = "80px Verdana";
+            ctx.fillStyle = "#FFF";
+            ctx.fillText("30%", CP[0] - 80, CP[1]);
+            ctx.closePath();
+            ctx.restore();
+
+            ctx1.putImageData(ctx.getImageData(0, 0, 700, 700), 0, 0);
+
+            window.requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</html>
