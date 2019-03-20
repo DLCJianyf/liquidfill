@@ -28,7 +28,7 @@
         </div>
     </body>
     <script>
-        var canvas = document.createElement("canvas");
+        var canvas = document.createElement("canvas", { willReadFrequently: true });
         canvas.width = "700";
         canvas.height = "700";
         var ctx = canvas.getContext("2d");
