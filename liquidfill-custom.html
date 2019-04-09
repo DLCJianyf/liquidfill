@@ -28,10 +28,10 @@
         </div>
     </body>
     <script>
-        var canvas = document.createElement("canvas", { willReadFrequently: true });
+        var canvas = document.createElement("canvas");
         canvas.width = "700";
         canvas.height = "700";
-        var ctx = canvas.getContext("2d");
+        var ctx = canvas.getContext("2d", { willReadFrequently: true });
 
         var canvas1 = document.getElementById("canvas");
         var ctx1 = canvas1.getContext("2d");
